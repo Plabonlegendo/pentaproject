@@ -28,6 +28,24 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public Person updatePerson(Person person) {
+        try{
+            return personRepository.save(person);
+        }catch(Exception ex){
+            throw new RuntimeException(ex);
+        }
+
+    }
+
+    @Override
+    public Person getPersonByEmailId(String email) {
+        return personRepository.findByEmailId(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with emailId: " + email));
+    }
+
+
+
+    @Override
     public Boolean isExistsPersonEmailId(String emailId) {
         return personRepository.existsByEmailId(emailId);
     }

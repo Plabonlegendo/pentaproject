@@ -20,6 +20,12 @@ public class PersonDetailsServiceImpl implements UserDetailsService {
         Person person = personRepository.findByEmailId(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with emailId: " + email));
 
-        return new PersonDetailsImpl(person);
+
+        if(person.isActive()){
+            return PersonDetailsImpl.build(person);
+        }else {
+            throw new RuntimeException("User is Not Active. Please Contact Admin");
+        }
+
     }
 }

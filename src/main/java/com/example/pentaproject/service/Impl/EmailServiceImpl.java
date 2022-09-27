@@ -25,11 +25,13 @@ public class EmailServiceImpl implements EmailService {
 
         String subject = "Here's the link to reset your password";
 
+//        System.out.println("the "+link);
         String content = "<p>Hello,</p>"
                 + "<p>You have requested to reset your password.</p>"
                 + "<p>Click the link below to change your password:</p>"
                 + "<p><a href=\"" + link + "\">Change my password</a></p>"
                 + "<br>"
+                + "<p>"+link+"</p>"
                 + "<p>Ignore this email if you do remember your password, "
                 + "or you have not made the request.</p>";
 

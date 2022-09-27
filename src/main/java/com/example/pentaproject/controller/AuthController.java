@@ -1,13 +1,12 @@
 package com.example.pentaproject.controller;
 
-import com.example.pentaproject.dtos.JwtResponse;
-import com.example.pentaproject.dtos.MessageResponse;
-import com.example.pentaproject.dtos.SignInRequest;
-import com.example.pentaproject.dtos.SignUpRequest;
+import com.example.pentaproject.dtos.*;
 import com.example.pentaproject.model.Person;
+import com.example.pentaproject.service.Impl.EmailServiceImpl;
 import com.example.pentaproject.service.Impl.PersonDetailsImpl;
 import com.example.pentaproject.service.PersonService;
 import com.example.pentaproject.service.jwt.JwtUtils;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,9 @@ public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
 
+    @Autowired
+    EmailServiceImpl emailService;
+
 
     @PostMapping("auth/signin/person")
     public ResponseEntity<?> authenticatePerson(@Valid @RequestBody SignInRequest signInRequest){
@@ -52,6 +56,9 @@ public class AuthController {
         List<String> roles = personDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
+
+
+        System.out.println(encoder.encode("admin123"));
 
         return ResponseEntity.ok(new JwtResponse(jwt,
                 personDetails.getId(),
@@ -75,6 +82,7 @@ public class AuthController {
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
+
         // Create new user's account
         Person teacher = new Person(signUpRequest.getUsername(),
                 signUpRequest.getPhoneNo(), signUpRequest.getEmail(),
@@ -84,6 +92,43 @@ public class AuthController {
         personService.createPerson(teacher);
 
         return ResponseEntity.ok(new MessageResponse("Person registered successfully!"));
+    }
+
+    @PostMapping("auth/forgot_password")
+    public ResponseEntity<?> processForgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest){
+        String email = forgotPasswordRequest.getEmail();
+        String token = RandomString.make(30);
+
+        try {
+            personService.updateResetPasswordToken(token, email);
+            String resetPasswordLink = forgotPasswordRequest.getLink() + "/reset_password?token=" + token;
+
+            System.out.println(resetPasswordLink);
+            emailService.sendEmail(email, resetPasswordLink);
+
+        }  catch (UnsupportedEncodingException | MessagingException e) {
+            throw new RuntimeException("error" + " Error while sending email");
+        } catch (RuntimeException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        return ResponseEntity.ok(new MessageResponse("Password Email Sent Successfully"));
+    }
+
+    @PostMapping("auth/reset_password")
+    public ResponseEntity<?> resetForgotPassWord(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest){
+        String token = resetPasswordRequest.getToken();
+        String password = resetPasswordRequest.getPassword();
+
+        Person person = personService.getByResetPasswordToken(token);
+
+        if (person == null) {
+            throw new RuntimeException("Invalid Request: Person not Found");
+        } else {
+            personService.updatePassword(person, password);
+        }
+
+        return ResponseEntity.ok(new MessageResponse("Password Reset Successfully"));
     }
 
 }
