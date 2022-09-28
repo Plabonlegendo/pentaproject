@@ -43,6 +43,11 @@ public class PersonServiceImpl implements PersonService {
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with emailId: " + email));
     }
 
+    @Override
+    public Person getPersonById(Integer id) {
+        return personRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with emailId: " + id));
+    }
 
 
     @Override

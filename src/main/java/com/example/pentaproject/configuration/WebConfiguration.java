@@ -82,6 +82,7 @@ public class WebConfiguration {
                 .authorizeRequests().antMatchers("/api/v1/auth/signup/**").permitAll()
                 .antMatchers("/api/v1/auth/signin/**").permitAll()
                 .antMatchers("/api/v1/auth/**").permitAll()
+                .antMatchers("/swagger-ui/**","/swagger-ui.html").permitAll()
                 .antMatchers("/api/test/**").permitAll()
                 .anyRequest().authenticated();
 

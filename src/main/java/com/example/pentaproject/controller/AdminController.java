@@ -40,7 +40,7 @@ public class AdminController {
         return ResponseEntity.ok(new GetResponse("Data Found Successfully", persons));
     }
 
-    @PostMapping("resources/admin/change_role")
+    @PutMapping("resources/admin/change_role")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     public ResponseEntity<?> changeRole(@Valid @RequestBody ChangeRoleRequest changeRoleRequest){
         Person person = personService.getPersonByEmailId(changeRoleRequest.getEmail());
@@ -52,7 +52,7 @@ public class AdminController {
         return ResponseEntity.ok(new MessageResponse("Role Updated Successfully"));
     }
 
-    @PostMapping("resources/admin/change_active_status")
+    @PutMapping("resources/admin/change_active_status")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     public ResponseEntity<?> changeActiveStatus(@Valid @RequestBody ChangeActiveStatusRequest changeActiveStatusRequest){
         Person person = personService.getPersonByEmailId(changeActiveStatusRequest.getEmail());

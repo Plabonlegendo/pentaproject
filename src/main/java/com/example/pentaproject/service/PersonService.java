@@ -9,6 +9,8 @@ public interface PersonService {
 
     Person getPersonByEmailId(String email);
 
+    Person getPersonById(Integer id);
+
     Boolean isExistsPersonEmailId(String emailId);
 
     Boolean isExistsPersonByPhoneNo(String phoneNo);
