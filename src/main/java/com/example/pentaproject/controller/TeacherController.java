@@ -1,9 +1,6 @@
 package com.example.pentaproject.controller;
 
-import com.example.pentaproject.dtos.GetResponse;
-import com.example.pentaproject.dtos.MessageResponse;
-import com.example.pentaproject.dtos.ProcessRequestsDto;
-import com.example.pentaproject.dtos.StudentTeacherRequest;
+import com.example.pentaproject.dtos.*;
 import com.example.pentaproject.model.Person;
 import com.example.pentaproject.model.RequestEvent;
 import com.example.pentaproject.service.PersonService;
@@ -27,14 +24,21 @@ public class TeacherController {
 
     @GetMapping("resources/teacher/requests/{id}")
     @PreAuthorize("hasAuthority('ROLE_Teacher')")
-    public ResponseEntity<?> getTeachersAndStudents(@PathVariable Integer id){
-        ArrayList<Person> persons = requestEventService.findAllTeachersRequests(id);
+    public ResponseEntity<?> getStudentsRequests(@PathVariable Integer id){
+        ArrayList<Person> studentsActual = requestEventService.findAllTeachersRequests(id);
 
-        if(persons == null){
+        ArrayList<PersonDto> students = new ArrayList<PersonDto>();
+        for(Person student: studentsActual){
+            students.add(new PersonDto(student.getId(),
+                    student.getName(), student.getPhoneNo(), student.getEmailId(), student.getDepartmentName(),
+                    student.getRole(), student.getAdvisorId()));
+        }
+
+        if(studentsActual == null){
             return ResponseEntity.ok(new GetResponse("Teachers and Students Not Found", null));
         }
 
-        return ResponseEntity.ok(new GetResponse("Data Found Successfully", persons));
+        return ResponseEntity.ok(new GetResponse("Data Found Successfully", students));
     }
 
     @PostMapping("resources/teacher/process_requests")
@@ -60,7 +64,14 @@ public class TeacherController {
     @GetMapping("resources/teacher/students_list/{id}")
     @PreAuthorize("hasAuthority('ROLE_Teacher')")
     public ResponseEntity<?> getStudents(@PathVariable Integer id){
-        ArrayList<Person> students = personService.getStudentsList(id);
+        ArrayList<Person> studentsActual = personService.getStudentsList(id);
+
+        ArrayList<PersonDto> students = new ArrayList<PersonDto>();
+        for(Person student: studentsActual){
+            students.add(new PersonDto(student.getId(),
+                    student.getName(), student.getPhoneNo(), student.getEmailId(), student.getDepartmentName(),
+                    student.getRole(), student.getAdvisorId()));
+        }
 
         return ResponseEntity.ok(new GetResponse("Students Found Successfully", students));
     }

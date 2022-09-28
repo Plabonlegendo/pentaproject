@@ -38,7 +38,7 @@ public class RequestEventServiceImpl implements RequestEventService {
 
     @Override
     public ArrayList<Person> findAllTeachersRequests(Integer id) {
-        ArrayList<Person> persons = personRepository.findAllByTeacher(id);
+        ArrayList<Person> persons = personRepository.findAllStudentsRequestsByTeacherId(id);
         return persons;
     }
 

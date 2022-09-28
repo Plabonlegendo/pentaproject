@@ -91,4 +91,9 @@ public class PersonServiceImpl implements PersonService {
     public ArrayList<Person> getStudentsList(Integer id) {
         return personRepository.findAllByAdvisorId(id);
     }
+
+    @Override
+    public ArrayList<Person> getAllTeachersFromDepartment(String departmentName, String role) {
+        return personRepository.findAllByDepartmentNameAndRole(departmentName, role);
+    }
 }

@@ -24,7 +24,9 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     ArrayList<Person> findAllPersons();
 
     @Query(value = "Select * from persons where id in (Select student_id from request_event where teacher_id = id)", nativeQuery = true)
-    ArrayList<Person> findAllByTeacher(Integer id);
+    ArrayList<Person> findAllStudentsRequestsByTeacherId(Integer id);
 
     ArrayList<Person> findAllByAdvisorId(Integer id);
+
+    ArrayList<Person> findAllByDepartmentNameAndRole(String departmentName, String Role);
 }

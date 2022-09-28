@@ -8,11 +8,11 @@ import java.util.List;
 public class GetResponse {
     private String message;
 
-    private List<Person> data;
+    private List<PersonDto> data;
 
     public GetResponse(){ }
 
-    public GetResponse(String message, ArrayList<Person> data) {
+    public GetResponse(String message, ArrayList<PersonDto> data) {
         this.message = message;
         this.data = data;
     }
@@ -25,11 +25,11 @@ public class GetResponse {
         this.message = message;
     }
 
-    public List<Person> getData() {
+    public List<PersonDto> getData() {
         return data;
     }
 
-    public void setData(List<Person> data) {
+    public void setData(List<PersonDto> data) {
         this.data = data;
     }
 }

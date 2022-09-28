@@ -1,9 +1,6 @@
 package com.example.pentaproject.controller;
 
-import com.example.pentaproject.dtos.ChangeActiveStatusRequest;
-import com.example.pentaproject.dtos.ChangeRoleRequest;
-import com.example.pentaproject.dtos.GetResponse;
-import com.example.pentaproject.dtos.MessageResponse;
+import com.example.pentaproject.dtos.*;
 import com.example.pentaproject.model.Person;
 import com.example.pentaproject.service.AdminService;
 import com.example.pentaproject.service.Impl.AdminServiceImpl;
@@ -31,7 +28,14 @@ public class AdminController {
     @GetMapping("resources/admin")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     public ResponseEntity<?> getTeachersAndStudents(){
-        ArrayList<Person> persons = adminService.findAllTeachersAndStudents();
+        ArrayList<Person> personsActual = adminService.findAllTeachersAndStudents();
+
+        ArrayList<PersonDto> persons = new ArrayList<PersonDto>();
+        for(Person person: personsActual){
+            persons.add(new PersonDto(person.getId(),
+                    person.getName(), person.getPhoneNo(), person.getEmailId(), person.getDepartmentName(),
+                    person.getRole(), null));
+        }
 
         if(persons == null){
             return ResponseEntity.ok(new GetResponse("Teachers and Students Not Found", null));

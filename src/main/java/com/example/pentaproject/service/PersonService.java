@@ -24,4 +24,6 @@ public interface PersonService {
     void updatePassword(Person person, String newPassword);
 
     ArrayList<Person> getStudentsList(Integer id);
+
+    ArrayList<Person> getAllTeachersFromDepartment(String departmentName, String Role);
 }
