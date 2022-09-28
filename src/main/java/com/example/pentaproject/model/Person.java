@@ -3,6 +3,7 @@ package com.example.pentaproject.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -52,7 +53,7 @@ public class Person {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    private List<RequestEvent> requestEventsList;
+    private List<RequestEvent> requestEventsList = new ArrayList<>();
 
     public Person(){ }
 

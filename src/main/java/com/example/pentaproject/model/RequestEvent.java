@@ -1,6 +1,7 @@
 package com.example.pentaproject.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 @Entity
@@ -26,14 +27,16 @@ public class RequestEvent {
     @JoinColumn(name = "student_id")
     private Person student;
 
+    @NotBlank
     @Column(name = "event_name")
     private String eventName;
 
     public RequestEvent(){ }
 
-    public RequestEvent(Person teacher, Person student){
+    public RequestEvent(Person teacher, Person student, String eventName){
         this.teacher = teacher;
         this.student = student;
+        this.eventName = eventName;
     }
 
     @Override
@@ -49,5 +52,37 @@ public class RequestEvent {
     @Override
     public int hashCode() {
         return Objects.hash(teacher.getEmailId(), student.getEmailId(), eventName);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Person getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Person teacher) {
+        this.teacher = teacher;
+    }
+
+    public Person getStudent() {
+        return student;
+    }
+
+    public void setStudent(Person student) {
+        this.student = student;
+    }
+
+    public String getEventName() {
+        return eventName;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
     }
 }

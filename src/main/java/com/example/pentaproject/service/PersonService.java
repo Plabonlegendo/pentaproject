@@ -2,6 +2,8 @@ package com.example.pentaproject.service;
 
 import com.example.pentaproject.model.Person;
 
+import java.util.ArrayList;
+
 public interface PersonService {
     Person createPerson(Person person);
 
@@ -20,4 +22,6 @@ public interface PersonService {
     Person getByResetPasswordToken(String token);
 
     void updatePassword(Person person, String newPassword);
+
+    ArrayList<Person> getStudentsList(Integer id);
 }

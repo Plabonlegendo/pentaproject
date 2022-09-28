@@ -3,11 +3,12 @@ package com.example.pentaproject.dtos;
 import com.example.pentaproject.model.Person;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GetResponse {
     private String message;
 
-    private ArrayList<Person> data;
+    private List<Person> data;
 
     public GetResponse(){ }
 
@@ -24,11 +25,11 @@ public class GetResponse {
         this.message = message;
     }
 
-    public ArrayList<Person> getData() {
+    public List<Person> getData() {
         return data;
     }
 
-    public void setData(ArrayList<Person> data) {
+    public void setData(List<Person> data) {
         this.data = data;
     }
 }

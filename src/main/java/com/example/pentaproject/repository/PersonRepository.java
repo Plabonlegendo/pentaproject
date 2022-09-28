@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface PersonRepository extends JpaRepository<Person, Integer> {
@@ -21,4 +22,9 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     @Query(value = "select * from PERSONS p where p.role != 'Admin'", nativeQuery = true)
     ArrayList<Person> findAllPersons();
+
+    @Query(value = "Select * from persons where id in (Select student_id from request_event where teacher_id = id)", nativeQuery = true)
+    ArrayList<Person> findAllByTeacher(Integer id);
+
+    ArrayList<Person> findAllByAdvisorId(Integer id);
 }

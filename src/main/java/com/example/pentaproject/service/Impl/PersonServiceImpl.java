@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -84,5 +85,10 @@ public class PersonServiceImpl implements PersonService {
 
         person.setResetPasswordToken(null);
         personRepository.save(person);
+    }
+
+    @Override
+    public ArrayList<Person> getStudentsList(Integer id) {
+        return personRepository.findAllByAdvisorId(id);
     }
 }
