@@ -25,10 +25,10 @@ public class RequestEventServiceImpl implements RequestEventService {
     @Override
     public void sendsRequest(Integer studentId, Integer teacherId, String eventName) {
         Person student = personRepository.findById(studentId)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with emailId: " + studentId));
+                .orElseThrow(() -> new UsernameNotFoundException("Student Not Found with emailId: " + studentId));
 
         Person teacher = personRepository.findById(teacherId)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with emailId: " + teacherId));
+                .orElseThrow(() -> new UsernameNotFoundException("Teacher Not Found with emailId: " + teacherId));
 
 
         RequestEvent requestEvent = new RequestEvent(teacher, student, eventName);
@@ -45,9 +45,9 @@ public class RequestEventServiceImpl implements RequestEventService {
     @Override
     public RequestEvent searchEventByTeacherStudent(Integer studentId, Integer teacherId) {
         Person student = personRepository.findById(studentId)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with emailId: " + studentId));
+                .orElseThrow(() -> new UsernameNotFoundException("Student Not Found with emailId: " + studentId));
         Person teacher = personRepository.findById(teacherId)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with emailId: " + teacherId));
+                .orElseThrow(() -> new UsernameNotFoundException("Teacher Not Found with emailId: " + teacherId));
         RequestEvent requestEvent = requestEventRepository.findByTeacherAndStudent(teacher, student);
 
         return requestEvent;

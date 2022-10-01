@@ -1,5 +1,6 @@
 package com.example.pentaproject.service.Impl;
 
+import com.example.pentaproject.exception.UserNotFoundException;
 import com.example.pentaproject.model.Person;
 import com.example.pentaproject.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class PersonDetailsServiceImpl implements UserDetailsService {
         if(person.isActive()){
             return PersonDetailsImpl.build(person);
         }else {
-            throw new RuntimeException("User is Not Active. Please Contact Admin");
+            throw new UserNotFoundException();
         }
 
     }

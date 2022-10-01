@@ -1,20 +1,21 @@
 package com.example.pentaproject.dtos;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class ChangeRoleRequest {
-    @NotBlank
-    private String email;
+    @NotNull
+    private Integer id;
 
     @NotBlank
     private String changedRole;
 
-    public String getEmail() {
-        return email;
+    public Integer getId() {
+        return id;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getChangedRole() {

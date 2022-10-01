@@ -1,6 +1,7 @@
 package com.example.pentaproject.service.Impl;
 
 import com.example.pentaproject.dtos.EditProfileRequest;
+import com.example.pentaproject.exception.UserNotFoundException;
 import com.example.pentaproject.model.Person;
 import com.example.pentaproject.repository.PersonRepository;
 import com.example.pentaproject.service.TeacherStudentSharedService;
@@ -23,12 +24,10 @@ public class TeacherStudentSharedServiceImpl implements TeacherStudentSharedServ
             person.setName(editProfileRequest.getUsername());
             person.setPhoneNo(editProfileRequest.getPhoneNo());
             person.setEmailId(editProfileRequest.getEmail());
-        }
 
-        try{
             return personRepository.save(person);
-        }catch (Exception ex){
-            throw new RuntimeException("Update is not successful");
+        }else{
+            throw new UserNotFoundException();
         }
 
     }

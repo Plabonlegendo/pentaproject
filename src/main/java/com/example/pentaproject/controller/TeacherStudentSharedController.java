@@ -2,6 +2,7 @@ package com.example.pentaproject.controller;
 
 
 import com.example.pentaproject.dtos.*;
+import com.example.pentaproject.exception.UserNotFoundException;
 import com.example.pentaproject.model.Person;
 import com.example.pentaproject.service.PersonService;
 import com.example.pentaproject.service.TeacherStudentSharedService;
@@ -31,8 +32,13 @@ public class TeacherStudentSharedController {
     @PreAuthorize("hasAuthority('ROLE_Teacher') or hasAuthority('ROLE_Student')")
     public ResponseEntity<?> getPersonProfile(@PathVariable Integer id){
         Person person = personService.getPersonById(id);
+        if(person == null){
+            throw new UserNotFoundException();
+        }
 
-        return ResponseEntity.ok(person);
+        return ResponseEntity.ok(new GetPersonResponse("Profile found Successfully", new PersonDto(person.getId(),
+                person.getName(), person.getPhoneNo(), person.getEmailId(), person.getDepartmentName(),
+                person.getRole(), person.getAdvisorId())));
     }
 
     @PutMapping("resources/edit_profile/{id}")

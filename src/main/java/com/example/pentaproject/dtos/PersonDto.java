@@ -5,7 +5,7 @@ public class PersonDto {
 
     private String name;
 
-    private String phone;
+    private String phoneNo;
 
     private String email;
 
@@ -15,10 +15,23 @@ public class PersonDto {
 
     private Integer advisorId;
 
+    private boolean isActive;
+
+    public PersonDto(Integer id, String name, String phone, String email, String departmentName, String role, Integer advisorId, boolean isActive) {
+        this.id = id;
+        this.name = name;
+        this.phoneNo = phone;
+        this.email = email;
+        this.departmentName = departmentName;
+        this.role = role;
+        this.advisorId = advisorId;
+        this.isActive = isActive;
+    }
+
     public PersonDto(Integer id, String name, String phone, String email, String departmentName, String role, Integer advisorId) {
         this.id = id;
         this.name = name;
-        this.phone = phone;
+        this.phoneNo = phone;
         this.email = email;
         this.departmentName = departmentName;
         this.role = role;
@@ -42,11 +55,11 @@ public class PersonDto {
     }
 
     public String getPhone() {
-        return phone;
+        return phoneNo;
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
+        this.phoneNo = phone;
     }
 
     public String getEmail() {
@@ -79,5 +92,13 @@ public class PersonDto {
 
     public void setAdvisorId(Integer advisorId) {
         this.advisorId = advisorId;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

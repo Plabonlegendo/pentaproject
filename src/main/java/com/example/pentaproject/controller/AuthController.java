@@ -1,6 +1,10 @@
 package com.example.pentaproject.controller;
 
 import com.example.pentaproject.dtos.*;
+import com.example.pentaproject.exception.MailNotSentException;
+import com.example.pentaproject.exception.MailUnsupportedException;
+import com.example.pentaproject.exception.UserActionNotAccepted;
+import com.example.pentaproject.exception.UserNotFoundException;
 import com.example.pentaproject.model.Person;
 import com.example.pentaproject.service.Impl.EmailServiceImpl;
 import com.example.pentaproject.service.Impl.PersonDetailsImpl;
@@ -8,16 +12,15 @@ import com.example.pentaproject.service.PersonService;
 import com.example.pentaproject.service.jwt.JwtUtils;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
     @Autowired
     PersonService personService;
@@ -58,13 +62,11 @@ public class AuthController {
                 .collect(Collectors.toList());
 
 
-        System.out.println(encoder.encode("admin123"));
-
-        return ResponseEntity.ok(new JwtResponse(jwt,
+        return new ResponseEntity<>(new GetJwtResponse("Login Successful",new JwtResponse(jwt,
                 personDetails.getId(),
                 personDetails.getUsername(),
                 personDetails.getEmail(),
-                roles));
+                roles.get(0).split("_")[1])), HttpStatus.OK);
 
     }
 
@@ -99,17 +101,19 @@ public class AuthController {
         String email = forgotPasswordRequest.getEmail();
         String token = RandomString.make(30);
 
+        if(personService.getPersonByEmailId(email).getRole().equals("Admin")){
+            throw new UserActionNotAccepted();
+        }
         try {
             personService.updateResetPasswordToken(token, email);
             String resetPasswordLink = forgotPasswordRequest.getLink() + "/reset_password?token=" + token;
 
-            System.out.println(resetPasswordLink);
             emailService.sendEmail(email, resetPasswordLink);
 
         }  catch (UnsupportedEncodingException | MessagingException e) {
-            throw new RuntimeException("error" + " Error while sending email");
+            throw new MailUnsupportedException();
         } catch (RuntimeException ex) {
-            throw new RuntimeException(ex);
+            throw new MailNotSentException();
         }
 
         return ResponseEntity.ok(new MessageResponse("Password Email Sent Successfully"));
@@ -123,7 +127,7 @@ public class AuthController {
         Person person = personService.getByResetPasswordToken(token);
 
         if (person == null) {
-            throw new RuntimeException("Invalid Request: Person not Found");
+            throw new UserNotFoundException();
         } else {
             personService.updatePassword(person, password);
         }

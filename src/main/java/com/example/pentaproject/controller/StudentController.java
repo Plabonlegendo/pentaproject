@@ -2,6 +2,8 @@ package com.example.pentaproject.controller;
 
 
 import com.example.pentaproject.dtos.*;
+import com.example.pentaproject.exception.InvalidEventNameInputException;
+import com.example.pentaproject.exception.UserNotFoundException;
 import com.example.pentaproject.model.Person;
 import com.example.pentaproject.service.PersonService;
 import com.example.pentaproject.service.RequestEventService;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -26,8 +27,12 @@ public class StudentController {
 
     @PostMapping("resources/student/sends_request")
     @PreAuthorize("hasAuthority('ROLE_Student')")
-    public ResponseEntity<?> changeRole(@Valid @RequestBody RequestEventDto requestEventDto){
-        requestEventService.sendsRequest(requestEventDto.getStudentId(), requestEventDto.getTeacherId(), requestEventDto.getEventName());
+    public ResponseEntity<?> sendsRequestTeacher(@Valid @RequestBody RequestEventDto requestEventDto){
+        if(requestEventDto.getEventName().equalsIgnoreCase("Sent")){
+            requestEventService.sendsRequest(requestEventDto.getStudentId(), requestEventDto.getTeacherId(), requestEventDto.getEventName());
+        }else{
+            throw new InvalidEventNameInputException();
+        }
         return ResponseEntity.ok(new MessageResponse("Request Sent Successfully"));
     }
 
@@ -51,7 +56,7 @@ public class StudentController {
                 }
             }
         }else{
-            throw new RuntimeException("Student Not Found");
+            throw new UserNotFoundException();
         }
 
         return ResponseEntity.ok(new GetResponse("Data Found Successfully", teachers));
